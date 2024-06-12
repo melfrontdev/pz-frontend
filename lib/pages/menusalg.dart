@@ -6,12 +6,14 @@ class PizzaMenuItem {
   final String description;
   final String imageUrl;
   final double price;
+  int quantity;
 
   PizzaMenuItem({
     required this.title,
     required this.description,
     required this.imageUrl,
     required this.price,
+    this.quantity = 1,
   });
 }
 
@@ -49,7 +51,6 @@ class _PizzaMenuPageState extends State<PizzaMenuPage> {
       imageUrl: 'lib/images/pizza_portuguesa.jpg',
       price: 22.0,
     ),
-    // Additional savory pizzas
   ];
 
   final List<PizzaMenuItem> sweetPizzas = [
@@ -111,8 +112,29 @@ class _PizzaMenuPageState extends State<PizzaMenuPage> {
 
   void _addToCart(PizzaMenuItem pizza) {
     setState(() {
-      _cartItems.add(pizza);
-      _cartItemCount++;
+      final existingItem = _cartItems.firstWhere(
+        (item) => item.title == pizza.title,
+        orElse: () => PizzaMenuItem(
+          title: '',
+          description: '',
+          imageUrl: '',
+          price: 0,
+          quantity: 0,
+        ),
+      );
+      if (existingItem.title.isNotEmpty) {
+        existingItem.quantity++;
+      } else {
+        _cartItems.add(pizza);
+      }
+      _cartItemCount = _cartItems.length;
+    });
+  }
+
+  void _clearCart() {
+    setState(() {
+      _cartItems.clear();
+      _cartItemCount = 0;
     });
   }
 
@@ -120,14 +142,19 @@ class _PizzaMenuPageState extends State<PizzaMenuPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Menu de Pizzas'),
+        title: Row(
+          children: [
+            Image.network(
+              'lib/images/logo.png',
+              height: 40,
+              width: 40,
+              fit: BoxFit.contain,
+            ),
+            SizedBox(width: 10),
+            Text('Menu de Pizzas'),
+          ],
+        ),
         actions: [
-          IconButton(
-            icon: Icon(Icons.account_circle),
-            onPressed: () {
-              // Handle user profile action
-            },
-          ),
           Stack(
             children: [
               IconButton(
@@ -136,7 +163,11 @@ class _PizzaMenuPageState extends State<PizzaMenuPage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => FinalizePurchasePage()),
+                      builder: (context) => FinalizePurchasePage(
+                        cartItems: _cartItems,
+                        onClearCart: _clearCart,
+                      ),
+                    ),
                   );
                 },
               ),
@@ -164,6 +195,10 @@ class _PizzaMenuPageState extends State<PizzaMenuPage> {
                   ),
                 ),
             ],
+          ),
+          IconButton(
+            icon: Icon(Icons.account_circle),
+            onPressed: () {},
           ),
           SizedBox(width: 16),
         ],
@@ -223,6 +258,7 @@ class _PizzaMenuPageState extends State<PizzaMenuPage> {
     return Card(
       elevation: 4,
       margin: EdgeInsets.all(10),
+      color: Colors.orange,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

@@ -130,6 +130,7 @@ class _PaymentPageState extends State<PaymentPage> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.orange,
                   minimumSize: Size(double.infinity, 50),
+                  foregroundColor: Colors.white,
                 ),
               ),
             ),

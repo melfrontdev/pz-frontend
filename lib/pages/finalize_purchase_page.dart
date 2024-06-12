@@ -1,31 +1,23 @@
-// lib/pages/finalize_purchase_page.dart
-
 import 'package:flutter/material.dart';
 import 'package:pizzanove/models/cart_item.dart';
-import 'payment_page.dart'; // Importe a página de formas de pagamento
+import 'package:pizzanove/pages/menusalg.dart';
+import 'payment_page.dart';
 
-class FinalizePurchasePage extends StatelessWidget {
-  final List<CartItem> cartItems = [
-    CartItem(
-      title: 'Pizza Calabresa',
-      description: 'Calabresa com cebola',
-      price: 20.0,
-      quantity: 1,
-      imageUrl: 'lib/images/pizza_calabresa.jpg',
-    ),
-    CartItem(
-      title: 'Pizza Quatro Queijos',
-      description: 'Quatro tipos de queijo',
-      price: 25.0,
-      quantity: 2,
-      imageUrl: 'lib/images/pizza_quatro_queijos.jpg',
-    ),
-  ];
+class FinalizePurchasePage extends StatefulWidget {
+  final List<PizzaMenuItem> cartItems;
+  final Function onClearCart;
+
+  FinalizePurchasePage({required this.cartItems, required this.onClearCart});
 
   @override
+  _FinalizePurchasePageState createState() => _FinalizePurchasePageState();
+}
+
+class _FinalizePurchasePageState extends State<FinalizePurchasePage> {
+  @override
   Widget build(BuildContext context) {
-    double totalPrice =
-        cartItems.fold(0, (sum, item) => sum + (item.price * item.quantity));
+    double totalPrice = widget.cartItems
+        .fold(0, (sum, item) => sum + (item.price * item.quantity));
 
     return Scaffold(
       appBar: AppBar(
@@ -36,10 +28,11 @@ class FinalizePurchasePage extends StatelessWidget {
         children: [
           Expanded(
             child: ListView.builder(
-              itemCount: cartItems.length,
+              itemCount: widget.cartItems.length,
               itemBuilder: (context, index) {
-                final item = cartItems[index];
+                final item = widget.cartItems[index];
                 return Card(
+                  color: Colors.orange,
                   margin: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
                   child: ListTile(
                     contentPadding: EdgeInsets.all(10),
@@ -53,18 +46,18 @@ class FinalizePurchasePage extends StatelessWidget {
                       item.title,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        color: Colors.orange,
+                        color: Colors.white,
                       ),
                     ),
                     subtitle: Text(
                       '${item.description}\nQuantidade: ${item.quantity}',
-                      style: TextStyle(color: Colors.black54),
+                      style: TextStyle(color: Colors.white70),
                     ),
                     trailing: Text(
                       'R\$${(item.price * item.quantity).toStringAsFixed(2)}',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        color: Colors.orange,
+                        color: Colors.white,
                       ),
                     ),
                     isThreeLine: true,
@@ -99,21 +92,47 @@ class FinalizePurchasePage extends StatelessWidget {
                   ],
                 ),
                 SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            PaymentPage(totalPrice: totalPrice),
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  PaymentPage(totalPrice: totalPrice),
+                            ),
+                          );
+                        },
+                        child: Text('Ir para formas de pagamento'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.orange,
+                          minimumSize: Size(double.infinity, 50),
+                          foregroundColor: Colors.white,
+                        ),
                       ),
-                    );
-                  },
-                  child: Text('Ir para formas de pagamento'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.orange,
-                    minimumSize: Size(double.infinity, 50),
-                  ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 10),
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          widget.onClearCart();
+                          Navigator.pop(context);
+                        },
+                        child: Text('Limpar Carrinho'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red,
+                          minimumSize: Size(double.infinity, 50),
+                          foregroundColor: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),

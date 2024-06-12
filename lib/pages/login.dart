@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:pizzanove/pages/cadastropage.dart';
+import 'package:pizzanove/pages/forgetPassword_Page.dart';
 import 'package:pizzanove/pages/menusalg.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -23,6 +25,11 @@ class LoginForm extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
+        Image.network(
+          'lib/images/logo.png',
+          height: 250.0,
+        ),
+        SizedBox(height: 20.0),
         TextFormField(
           decoration: InputDecoration(
             hintText: 'Login',
@@ -50,14 +57,14 @@ class LoginForm extends StatelessWidget {
         SizedBox(height: 20.0),
         ElevatedButton(
           onPressed: () {
-            // Navegar para a página menu_salg.dart
+            // ir para a página menu_salg.dart
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => PizzaMenuPage()),
             );
           },
           style: ElevatedButton.styleFrom(
-            foregroundColor: Colors.orange,
+            foregroundColor: Colors.black,
             backgroundColor: Colors.white,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20.0),
@@ -66,10 +73,31 @@ class LoginForm extends StatelessWidget {
           ),
           child: const Text('Acessar'),
         ),
+        SizedBox(height: 20.0),
+        ElevatedButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => CadastroPage()),
+            );
+          },
+          style: ElevatedButton.styleFrom(
+            foregroundColor: Colors.white,
+            backgroundColor: Colors.orange,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+            elevation: 5, // Elevação do botão
+          ),
+          child: const Text('Registre-se'),
+        ),
         SizedBox(height: 10.0),
         TextButton(
           onPressed: () {
-            // Implementar a lógica de recuperação de senha aqui
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ForgotPasswordPage()),
+            );
           },
           child: const Text('Esqueci minha senha'),
         ),

@@ -16,6 +16,12 @@ class OrderConfirmationPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            Image.network(
+              'lib/images/logo.png',
+              height: 300,
+              width: 300,
+            ),
+            SizedBox(height: 20),
             Text(
               'Pedido finalizado com sucesso!',
               style: TextStyle(
